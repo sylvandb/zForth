@@ -15,6 +15,12 @@
 #define ZF_FLAG_PRIM      (1<<5)
 #define ZF_FLAG_LEN(v)    (v & 0x1f)
 
+#if ZF_ENABLE_INLINE
+#define ZF_INLINE __inline__
+#else
+#define ZF_INLINE
+#endif /* ZF_ENABLE_INLINE */
+
 
 /* This macro is used to perform boundary checks. If ZF_ENABLE_BOUNDARY_CHECKS
  * is set to 0, the boundary check code will not be compiled in to reduce size */
@@ -163,7 +169,7 @@ void zf_abort(zf_result reason)
  * Stack operations. 
  */
 
-void zf_push(zf_cell v)
+ZF_INLINE void zf_push(zf_cell v)
 {
 	CHECK(dsp < ZF_DSTACK_SIZE, ZF_ABORT_DSTACK_OVERRUN);
 	trace("»" ZF_CELL_FMT " ", v);
@@ -171,7 +177,7 @@ void zf_push(zf_cell v)
 }
 
 
-zf_cell zf_pop(void)
+ZF_INLINE zf_cell zf_pop(void)
 {
 	zf_cell v;
 	CHECK(dsp > 0, ZF_ABORT_DSTACK_UNDERRUN);
@@ -181,14 +187,14 @@ zf_cell zf_pop(void)
 }
 
 
-zf_cell zf_pick(zf_addr n)
+ZF_INLINE zf_cell zf_pick(zf_addr n)
 {
 	CHECK(n < dsp, ZF_ABORT_DSTACK_UNDERRUN);
 	return dstack[dsp-n-1];
 }
 
 
-static void zf_pushr(zf_cell v)
+ZF_INLINE static void zf_pushr(zf_cell v)
 {
 	CHECK(rsp < ZF_RSTACK_SIZE, ZF_ABORT_RSTACK_OVERRUN);
 	trace("r»" ZF_CELL_FMT " ", v);
@@ -196,7 +202,7 @@ static void zf_pushr(zf_cell v)
 }
 
 
-static zf_cell zf_popr(void)
+ZF_INLINE static zf_cell zf_popr(void)
 {
 	zf_cell v;
 	CHECK(rsp > 0, ZF_ABORT_RSTACK_UNDERRUN);
@@ -205,7 +211,7 @@ static zf_cell zf_popr(void)
 	return v;
 }
 
-zf_cell zf_pickr(zf_addr n)
+ZF_INLINE zf_cell zf_pickr(zf_addr n)
 {
 	CHECK(n < rsp, ZF_ABORT_RSTACK_UNDERRUN);
 	return rstack[rsp-n-1];

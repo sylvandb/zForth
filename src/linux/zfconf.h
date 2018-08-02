@@ -10,6 +10,11 @@
 #define ZF_ENABLE_TRACE 1
 
 
+/* Set to 1 to inline some key functions (increases code size) */
+
+#define ZF_ENABLE_INLINE 1
+
+
 /* Set to 1 to add boundary checks to stack operations. Increases .text size
  * by approx 100 bytes */
 
