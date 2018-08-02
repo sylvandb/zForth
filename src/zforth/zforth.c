@@ -905,6 +905,10 @@ zf_result zf_eval(const char *buf)
 	}
 }
 
+zf_cell zf_sc()
+{
+  return dsp;
+}
 
 void *zf_dump(size_t *len)
 {
