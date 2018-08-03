@@ -84,13 +84,13 @@ static jmp_buf jmpbuf;
 
 #define HERE      uservar[0]    /* compilation pointer in dictionary */
 #define LATEST    uservar[1]    /* pointer to last compiled word */
-#define TRACE     uservar[2]    /* trace enable flag */
+/* #define TRACE     uservar[2]    /\* trace enable flag *\/ */
 #define COMPILING uservar[3]    /* compiling flag */
 #define POSTPONE  uservar[4]    /* flag to indicate next imm word should be compiled */
 #define USERVAR_COUNT 5
 
 static const char uservar_names[] =
-	_("h")   _("latest") _("trace")  _("compiling")  _("_postpone");
+	_("h")   _("latest")  _("compiling")  _("_postpone");
 
 static zf_addr *uservar = (zf_addr *)dict;
 
@@ -818,10 +818,9 @@ static void handle_char(char c)
  * Initialisation
  */
 
-void zf_init(int enable_trace)
+void zf_init()
 {
 	HERE = USERVAR_COUNT * sizeof(zf_addr);
-	TRACE = enable_trace;
 	LATEST = 0;
 	dsp = 0;
 	rsp = 0;

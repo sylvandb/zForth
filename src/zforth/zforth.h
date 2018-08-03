@@ -48,7 +48,7 @@ typedef enum {
 /* ZForth API functions */
 
 
-void zf_init(int trace);
+void zf_init();
 void zf_bootstrap(void);
 void *zf_dump(size_t *len);
 zf_result zf_eval(const char *buf);
