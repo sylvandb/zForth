@@ -87,7 +87,7 @@ static jmp_buf jmpbuf;
 /* #define TRACE     uservar[2]    /\* trace enable flag *\/ */
 #define COMPILING uservar[3]    /* compiling flag */
 #define POSTPONE  uservar[4]    /* flag to indicate next imm word should be compiled */
-#define USERVAR_COUNT 5
+#define USERVAR_COUNT 4
 
 static const char uservar_names[] =
 	_("h")   _("latest")  _("compiling")  _("_postpone");
