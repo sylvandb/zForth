@@ -2,6 +2,7 @@
 
 all:
 	make -C src/linux
+	cp -u src/linux/zforth ./
 
 clean:
 	make -C src/linux clean
