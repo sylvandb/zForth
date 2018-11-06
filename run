@@ -1,0 +1,14 @@
+#!/bin/sh
+
+D=$(dirname "$(readlink -f "$0")")
+
+if [ ! -x "$D"/zforth ]; then
+  (
+    cd "$D"
+    make
+    mv src/linux/zforth ./
+    make clean
+  )
+fi
+
+$D/zforth $D/forth/core.zf
