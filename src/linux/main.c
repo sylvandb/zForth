@@ -11,6 +11,8 @@
 #include <math.h>
 
 #ifdef USE_READLINE
+#include <unistd.h>
+#include <pwd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #endif
@@ -58,6 +60,8 @@ zf_result do_eval(const char *src, int line, const char *buf)
 /*
  * Load given forth file
  */
+
+void _include_stdin(void);
 
 void include(const char *fname)
 {
@@ -219,7 +223,6 @@ int main(int argc, char **argv)
 	int i;
 	int c;
 	int trace = 0;
-	int line = 0;
 	const char *fname_load = NULL;
 
 	/* Parse command line options */
@@ -266,10 +269,41 @@ int main(int argc, char **argv)
 
 	/* Interactive interpreter: read a line using readline library,
 	 * and pass to zf_eval() for evaluation*/
+	_include_stdin();
+	return 0;
+}
+
 
 #ifdef USE_READLINE
+char *history_fspec(void)
+{
+	char *fname = "/.zforth.hist";
+	char *histname = NULL;
+	char *home = getenv("HOME");
 
-	read_history(".zforth.hist");
+	if (!home) {
+		struct passwd *pw = getpwuid(getuid());
+		if (pw && pw->pw_dir) {
+			home = pw->pw_dir;
+		}
+	}
+
+	if (home) {
+		histname = malloc(1 + strlen(home) + strlen(fname));
+		if (histname) {
+			strcpy(histname, home);
+			strcat(histname, fname);
+		}
+	}
+
+	return histname;
+}
+
+void _include_stdin(void)
+{
+	int line = 0;
+	char *histname = history_fspec();
+	if (histname) read_history(histname);
 
 	for(;;) {
 
@@ -282,29 +316,34 @@ int main(int argc, char **argv)
 			printf("\n");
 
 			add_history(buf);
-			write_history(".zforth.hist");
-
+			if (histname) {
+				write_history(histname);
+			}
 		}
 
 		free(buf);
 	}
-#else
-	for(;;) {
-		char buf[4096];
-		if(fgets(buf, sizeof(buf), stdin)) {
-			do_eval("stdin", ++line, buf);
-			printf("\n");
-		} else {
-			break;
-		}
+	if (histname) {
+		free(histname);
+		histname = NULL;
 	}
-#endif
-
-	return 0;
 }
+
+#else
+
+void _include_stdin(void)
+{
+	int line = 0;
+	char buf[4096];
+
+	while (fgets(buf, sizeof(buf), stdin)) {
+		do_eval("stdin", ++line, buf);
+		printf("\n");
+	}
+}
+#endif
 
 
 /*
  * End
  */
-
