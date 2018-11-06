@@ -11,6 +11,8 @@
 #include <math.h>
 
 #ifdef USE_READLINE
+#include <unistd.h>
+#include <pwd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #endif
@@ -268,7 +270,26 @@ int main(int argc, char **argv)
 
 #ifdef USE_READLINE
 
-	read_history(".zforth.hist");
+	{
+	char *fname = "/.zforth.hist";
+	char *histname = NULL;
+	char *home = getenv("HOME");
+
+	if (!home) {
+		struct passwd *pw = getpwuid(getuid());
+		if (pw && pw->pw_dir) {
+			home = pw->pw_dir;
+		}
+	}
+
+	if (home) {
+		histname = malloc(1 + strlen(home) + strlen(fname));
+		if (histname) {
+			strcpy(histname, home);
+			strcat(histname, fname);
+			read_history(histname);
+		}
+	}
 
 	for(;;) {
 
@@ -281,10 +302,13 @@ int main(int argc, char **argv)
 			printf("\n");
 
 			add_history(buf);
-			write_history(".zforth.hist");
+			if (histname) {
+				write_history(histname);
 
+			}
 		}
 
+	}
 	}
 #else
 	for(;;) {
