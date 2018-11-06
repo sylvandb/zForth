@@ -1,0 +1,15 @@
+#!/bin/sh
+
+D=$(dirname "$(readlink -f "$0")")
+
+if [ ! -x "$D"/zforth ]; then
+  (
+    cd "$D"
+    make
+    make clean
+  )
+fi
+
+sdb=$D/forth/sdb.zf
+test -r $sdb || sdb=
+$D/zforth $D/forth/core.zf $D/forth/dict.zf $sdb "$@"
