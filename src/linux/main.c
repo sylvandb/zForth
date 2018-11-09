@@ -63,20 +63,28 @@ zf_result do_eval(const char *src, int line, const char *buf)
 
 void _include_stdin(void);
 
-void include(const char *fname)
+void _include(const char *fname, int script)
 {
-	char buf[256];
+	int line = 0;
+	char buf[4096];
+	FILE *f = fopen(fname, "r");
 
-	FILE *f = fopen(fname, "rb");
-	int line = 1;
-	if(f) {
-		while(fgets(buf, sizeof(buf), f)) {
-			do_eval(fname, line++, buf);
+	if (f) {
+		/* discard the shebang line */
+		if (script) fgets(buf, sizeof(buf), f);
+		while (fgets(buf, sizeof(buf), f)) {
+			do_eval(fname, ++line, buf);
 		}
+		if (script) printf("\n");
 		fclose(f);
 	} else {
 		fprintf(stderr, "error opening file '%s': %s\n", fname, strerror(errno));
 	}
+}
+
+void include(const char *fname)
+{
+	_include(fname, 0);
 }
 
 
@@ -204,10 +212,11 @@ zf_cell zf_host_parse_num(const char *buf)
 void usage(void)
 {
 	fprintf(stderr, 
-		"usage: zfort [options] [src ...]\n"
+		"usage: zforth [options] [src ...]\n"
 		"\n"
 		"Options:\n"
 		"   -h         show help\n"
+		"   -s         as a script interpreter\n"
 		"   -t         enable tracing\n"
 		"   -l FILE    load dictionary from FILE\n"
 	);
@@ -223,12 +232,16 @@ int main(int argc, char **argv)
 	int i;
 	int c;
 	int trace = 0;
+	int execscript = 0;
 	const char *fname_load = NULL;
 
 	/* Parse command line options */
 
-	while((c = getopt(argc, argv, "hl:t")) != -1) {
+	while((c = getopt(argc, argv, "hl:ts")) != -1) {
 		switch(c) {
+			case 's':
+				execscript = 1;
+				break;
 			case 't':
 				trace = 1;
 				break;
@@ -262,14 +275,20 @@ int main(int argc, char **argv)
 
 	/* Include files from command line */
 
-	for(i=0; i<argc; i++) {
+	for (i=0; i<argc - execscript; i++) {
 		include(argv[i]);
 	}
 
+	if (execscript) {
+		_include(argv[i], 1);
 
-	/* Interactive interpreter: read a line using readline library,
-	 * and pass to zf_eval() for evaluation*/
-	_include_stdin();
+	} else {
+
+		/* Interactive interpreter: read a line
+		 * and pass to zf_eval() for evaluation*/
+		_include_stdin();
+	}
+
 	return 0;
 }
 
