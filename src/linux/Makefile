@@ -9,9 +9,24 @@ CC	:= $(CROSS)gcc
 
 VPATH   := ../zforth
 CFLAGS	+= -I. -I../zforth
-CFLAGS  += -Os -g -pedantic -MMD
-CFLAGS  += -fsanitize=address -Wall -Wextra -Werror -Wno-unused-parameter -Wno-clobbered -Wno-unused-result
-LDFLAGS	+= -fsanitize=address -g 
+CFLAGS  += -pedantic -MMD
+CFLAGS  += -Wall -Wextra -Werror -Wno-unused-parameter -Wno-clobbered -Wno-unused-result
+
+ifdef optimize
+CFLAGS += -$(optimize)
+else
+CFLAGS += -Os
+endif
+
+ifndef nosanitize
+CFLAGS  += -fsanitize=address
+LDFLAGS += -fsanitize=address
+endif
+
+ifndef nodebug
+CFLAGS  += -g
+LDFLAGS += -g
+endif
 
 LIBS	+= -lm
 
