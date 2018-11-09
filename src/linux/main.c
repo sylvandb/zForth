@@ -321,18 +321,19 @@ char *history_fspec(void)
 void _include_stdin(void)
 {
 	int line = 0;
+	char *buf;
 	char *histname = history_fspec();
 	if (histname) read_history(histname);
 
 	for(;;) {
 
-		char *buf = readline("");
-		if(buf == NULL) break;
+		printf("\nOK\n");
+		buf = readline("");
+		if (!buf) break;
 
-		if(strlen(buf) > 0) {
+		if (strlen(buf)) {
 
 			do_eval("stdin", ++line, buf);
-			printf("\n");
 
 			add_history(buf);
 			if (histname) {
@@ -355,9 +356,10 @@ void _include_stdin(void)
 	int line = 0;
 	char buf[4096];
 
-	while (fgets(buf, sizeof(buf), stdin)) {
+	while (1) {
+		printf("\nOK\n");
+		if (!fgets(buf, sizeof(buf), stdin)) break;
 		do_eval("stdin", ++line, buf);
-		printf("\n");
 	}
 }
 #endif
