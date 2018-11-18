@@ -211,7 +211,7 @@ ZF_INLINE static zf_cell zf_popr(void)
 	return v;
 }
 
-ZF_INLINE zf_cell zf_pickr(zf_addr n)
+ZF_INLINE static zf_cell zf_pickr(zf_addr n)
 {
 	CHECK(n < rsp, ZF_ABORT_RSTACK_UNDERRUN);
 	return rstack[rsp-n-1];

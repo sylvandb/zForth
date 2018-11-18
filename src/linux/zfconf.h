@@ -41,8 +41,19 @@
  * integer type that suits your needs, or 'float' or 'double' if you need
  * floating point numbers */
 
+/*
 typedef float zf_cell;
 #define ZF_CELL_FMT "%.14g"
+#define ZF_CELL_IFMT "%f"
+*/
+typedef double zf_cell;
+#define ZF_CELL_FMT "%.14g"
+#define ZF_CELL_IFMT "%lf"
+/*
+typedef long long int zf_cell;
+#define ZF_CELL_FMT "%lli"
+#define ZF_CELL_IFMT "%lli"
+*/
 
 
 /* The type to use for pointers and adresses. 'unsigned int' is usually a good
