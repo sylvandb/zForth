@@ -39,11 +39,28 @@
 
 /* Type to use for the basic cell, data stack and return stack. Choose a signed
  * integer type that suits your needs, or 'float' or 'double' if you need
- * floating point numbers */
+ * floating point numbers. Ensure a SCAN_FMT type will fit into a CELL_FMT */
 
+/*
 typedef float zf_cell;
 #define ZF_CELL_FMT "%.14g"
 #define ZF_SCAN_FMT "%f"
+typedef double zf_cell;
+#define ZF_CELL_FMT "%.14g"
+#define ZF_SCAN_FMT "%lf"
+typedef int zf_cell;
+#define ZF_CELL_FMT "%i"
+#define ZF_SCAN_FMT "%i"
+typedef long int zf_cell;
+#define ZF_CELL_FMT "%li"
+#define ZF_SCAN_FMT "%li"
+typedef long long int zf_cell;
+#define ZF_CELL_FMT "%lli"
+#define ZF_SCAN_FMT "%lli"
+*/
+typedef double zf_cell;
+#define ZF_CELL_FMT "%.14g"
+#define ZF_SCAN_FMT "%lf"
 
 /* zf_int use for bitops, some arch int type width is less than register width,
    it will cause sign fill, so we need manual specify it */
