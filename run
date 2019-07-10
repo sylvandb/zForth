@@ -10,4 +10,6 @@ if [ ! -x "$D"/zforth ]; then
   )
 fi
 
-$D/zforth $D/forth/core.zf "$@"
+sdb=$D/forth/sdb.zf
+test -r $sdb || sdb=
+$D/zforth $D/forth/core.zf $D/forth/dict.zf $sdb "$@"
