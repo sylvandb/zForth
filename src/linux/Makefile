@@ -11,7 +11,7 @@ VPATH   := ../zforth
 CFLAGS	+= -I. -I../zforth
 CFLAGS  += -O2 -g -std=c99 -pedantic -MMD
 CFLAGS  += -Wall -Wextra -Werror -Wno-unused-parameter -Wno-clobbered -Wno-unused-result
-LDFLAGS	+= -g 
+LDFLAGS	+= -fsanitize=address -g
 
 LIBS	+= -lm
 
