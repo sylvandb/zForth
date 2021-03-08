@@ -339,6 +339,8 @@ void _include_stdin(void)
 				write_history(histname);
 			}
 		}
+
+		free(buf);
 	}
 }
 
