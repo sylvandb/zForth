@@ -48,7 +48,7 @@
 : not  =0 ;
 : !=   = not ;
 : cr   10 emit ;
-: br 32 emit ;
+: br   32 emit ;
 : ..   dup . ;
 : here h @ ;
 
@@ -101,6 +101,7 @@
 : do ' swap , ' >r , ' >r , here ; immediate
 : loop+ ' r> , ' + , ' dup , ' >r , ' lit , 1 , ' pickr , ' >= , ' jmp0 , , ' r> , ' drop , ' r> , ' drop , ; immediate
 : loop ' lit , 1 , postpone loop+ ;  immediate
+: +loop postpone loop+ ; immediate
 
 
 ( Create string literal, puts length and address on the stack )
@@ -118,5 +119,3 @@
 (
 vi: ts=3 sw=3 ft=forth
 )
-
-
