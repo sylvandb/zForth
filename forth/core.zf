@@ -88,6 +88,7 @@
 : do ' swap , ' >r , ' >r , here ; immediate
 : loop+ ' r> , ' + , ' dup , ' >r , ' lit , 1 , ' pickr , ' >= , ' jmp0 , , ' r> , ' drop , ' r> , ' drop , ; immediate
 : loop ' lit , 1 , postpone loop+ ;  immediate
+: +loop postpone loop+ ; immediate
 
 
 ( Create string literal, puts length and address on the stack )
