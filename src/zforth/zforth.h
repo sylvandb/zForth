@@ -1,6 +1,13 @@
 #ifndef zforth_h
 #define zforth_h
 
+#include <ctype.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <setjmp.h>
+#include <stdint.h>
+
 #include "zfconf.h"
 
 /* Abort reasons */

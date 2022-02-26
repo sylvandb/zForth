@@ -1,11 +1,4 @@
 
-#include <ctype.h>
-#include <string.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <setjmp.h>
-#include <stdint.h>
-
 #include "zforth.h"
 
 
