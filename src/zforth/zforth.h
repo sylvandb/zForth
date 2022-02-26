@@ -10,6 +10,9 @@ extern "C"
 #include <stdarg.h>
 #include <stdint.h>
 #include <setjmp.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "zfconf.h"
 
