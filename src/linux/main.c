@@ -1,4 +1,6 @@
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <limits.h>
@@ -60,6 +62,19 @@ zf_result do_eval(const char *src, int line, const char *buf)
 /*
  * Load given forth file
  */
+
+#ifdef ONEFILE
+char *hcwords;
+#else
+char *hcwords = NULL;
+#endif
+
+void _include_hardcoded(void)
+{
+	if (hcwords && *hcwords) {
+		do_eval("hcwords", 0, hcwords);
+	}
+}
 
 void _include_stdin(void);
 
@@ -272,6 +287,9 @@ int main(int argc, char **argv)
 		zf_bootstrap();
 	}
 
+
+	/* include words hardcoded in exe file */
+	_include_hardcoded();
 
 	/* Include files from command line */
 
