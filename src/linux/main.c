@@ -56,6 +56,12 @@ zf_result do_eval(zf_ctx *ctx, const char *src, int line, const char *buf)
  * Load given forth file
  */
 
+#ifdef ONEFILE
+/* initialized elsewhere, see Makefile */
+char *hcwords;
+#endif
+
+
 void include(zf_ctx *ctx, const char *fname)
 {
 	char buf[256];
@@ -264,6 +270,13 @@ int main(int argc, char **argv)
 		zf_bootstrap(ctx);
 	}
 
+
+#ifdef ONEFILE
+	/* include words hardcoded in exe file */
+	if (hcwords && *hcwords) {
+		do_eval(ctx, "hcwords", 0, hcwords);
+	}
+#endif
 
 	/* Include files from command line */
 
