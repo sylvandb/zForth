@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <math.h>
+#include <sys/time.h>
 
 #ifdef USE_READLINE
 #include <readline/readline.h>
@@ -113,6 +114,15 @@ static void load(zf_ctx *ctx, const char *fname)
 }
 
 
+static void gettime(zf_ctx *ctx)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	zf_push(ctx, tv.tv_usec);
+	zf_push(ctx, tv.tv_sec);
+}
+
+
 /*
  * Sys callback function
  */
@@ -165,6 +175,10 @@ zf_input_state zf_host_sys(zf_ctx *ctx, zf_syscall_id id, const char *input)
 		
 		case ZF_SYSCALL_USER + 3:
 			save(ctx, "zforth.save");
+			break;
+
+		case ZF_SYSCALL_USER + 99:
+			gettime(ctx);
 			break;
 
 		default:
