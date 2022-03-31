@@ -57,6 +57,7 @@ typedef enum {
 	PRIM_JMP,     PRIM_JMP0,      PRIM_TICK, PRIM_COMMENT, PRIM_PUSHR,    PRIM_POPR,
 	PRIM_EQUAL,   PRIM_SYS,       PRIM_PICK, PRIM_COMMA,   PRIM_KEY,      PRIM_LITS,
 	PRIM_LEN,     PRIM_AND,       PRIM_OR,   PRIM_XOR,     PRIM_SHL,      PRIM_SHR,
+	PRIM_S0,      PRIM_SP_PEEK,
 	PRIM_LITERAL,
 	PRIM_COUNT
 } zf_prim;
@@ -68,6 +69,7 @@ static const char prim_names[] =
 	_("jmp")     _("jmp0")       _("'")     _("_(")    _(">r")        _("r>")
 	_("=")       _("sys")        _("pick")  _(",,")    _("key")       _("lits")
 	_("##")      _("&")          _("|")     _("^")     _("<<")        _(">>")
+	_("s0")      _("sp@")
 	_("_literal");
 
 
@@ -552,6 +554,14 @@ static void do_prim(zf_ctx *ctx, zf_prim op, const char *input)
 				create(ctx, input, 0);
 				COMPILING(ctx) = 1;
 			}
+			break;
+
+		case PRIM_S0:
+			zf_push(ctx, 0);
+			break;
+
+		case PRIM_SP_PEEK:
+			zf_push(ctx, DSP(ctx));
 			break;
 
 		case PRIM_LTZ:
