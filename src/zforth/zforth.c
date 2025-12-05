@@ -95,6 +95,7 @@ static const char uservar_names[] =
 static void do_prim(zf_ctx *ctx, zf_prim prim, const char *input);
 static zf_addr dict_get_cell(zf_ctx *ctx, zf_addr addr, zf_cell *v);
 static void dict_get_bytes(zf_ctx *ctx, zf_addr addr, void *buf, size_t len);
+zf_cell zf_pickr(zf_ctx *ctx, zf_addr n);
 
 
 /* Tracing functions. If disabled, the trace() function is replaced by an empty
