@@ -313,13 +313,13 @@ int main(int argc, char **argv)
 
 	for(;;) {
 
+		printf("\nOK\n");
 		char *buf = readline("");
 		if(buf == NULL) break;
 
 		if(strlen(buf) > 0) {
 
 			do_eval(ctx, "stdin", ++line, buf);
-			printf("\n");
 
 			add_history(buf);
 			write_history(".zforth.hist");
@@ -331,9 +331,9 @@ int main(int argc, char **argv)
 #else
 	for(;;) {
 		char buf[4096];
+		printf("\nOK\n");
 		if(fgets(buf, sizeof(buf), stdin)) {
 			do_eval(ctx, "stdin", ++line, buf);
-			printf("\n");
 		} else {
 			break;
 		}
