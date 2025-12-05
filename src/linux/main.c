@@ -63,17 +63,24 @@ char *hcwords;
 #endif
 
 
-void include(zf_ctx *ctx, const char *fname)
+void include(zf_ctx *ctx, const char *fname, int shebang)
 {
 	char buf[256];
 
 	FILE *f = fopen(fname, "rb");
 	int line = 1;
 	if(f) {
+		/* discard the shebang line from a script */
+		if (shebang) {
+			fgets(buf, sizeof(buf), f);
+		}
 		while(fgets(buf, sizeof(buf), f)) {
 			do_eval(ctx, fname, line++, buf);
 		}
 		fclose(f);
+		if (shebang) {
+			printf("\n");
+		}
 	} else {
 		fprintf(stderr, "error opening file '%s': %s\n", fname, strerror(errno));
 	}
@@ -170,7 +177,7 @@ zf_input_state zf_host_sys(zf_ctx *ctx, zf_syscall_id id, const char *input)
 			if(input == NULL) {
 				return ZF_INPUT_PASS_WORD;
 			}
-			include(ctx, input);
+			include(ctx, input, 0);
 			break;
 		
 		case ZF_SYSCALL_USER + 3:
@@ -221,13 +228,14 @@ zf_cell zf_host_parse_num(zf_ctx *ctx, const char *buf)
 void usage(void)
 {
 	fprintf(stderr, 
-		"usage: zfort [options] [src ...]\n"
+		"usage: zforth [options] [src ...]\n"
 		"\n"
 		"Options:\n"
 		"   -h         show help\n"
 		"   -t         enable tracing\n"
 		"   -l FILE    load dictionary from FILE\n"
 		"   -q         quiet\n"
+		"   -s         as a script interpreter\n"
 	);
 }
 
@@ -243,12 +251,16 @@ int main(int argc, char **argv)
 	int trace = 0;
 	int line = 0;
 	int quiet = 0;
+	int shebang = 0;
 	const char *fname_load = NULL;
 
 	/* Parse command line options */
 
 	while((c = getopt(argc, argv, "hl:tq")) != -1) {
 		switch(c) {
+			case 's':
+				shebang = 1;
+				break;
 			case 't':
 				trace = 1;
 				break;
@@ -293,9 +305,16 @@ int main(int argc, char **argv)
 #endif
 
 	/* Include files from command line */
+	/* shebang: script name is last on cmdline and is special */
 
-	for(i=0; i<argc; i++) {
-		include(ctx, argv[i]);
+	for(i=0; i<argc - shebang; i++) {
+		include(ctx, argv[i], 0);
+	}
+
+	if (shebang) {
+		include(ctx, argv[i], shebang);
+		/* how to know a "real" exit status? */
+		return 0;
 	}
 
 	if(!quiet) {
